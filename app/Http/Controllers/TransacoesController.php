@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\transacoes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TransacoesController extends Controller
 {
@@ -33,29 +34,46 @@ class TransacoesController extends Controller
      */
     public function store(TransacaoRequest $request)
     {
-        //dd("chegou aqui");
-        $data = [
-            'user_id' => Auth::id(),
-            'valor' => $request['valor'],
-            'cpf' => $request['cpf'],
-            'status' => 'em_processamento'
-        ];
-
-        if ($request->hasFile('arquivo')) {
-            $file = $request->file('arquivo');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('transacoes', $fileName, 'public');
+        try {
+            if ($request->hasFile('documento') && $request->file('documento')->isValid()) {
+                
             
-            $data['arquivo'] = $filePath;
-            $data['arquivo_nome'] = $file->getClientOriginalName();
-        }
+                $nomeArquivo = time() . '_' . uniqid() . '.' . $request->documento->extension();
+                
+                
+                $caminho = 'documentos/' . date('Y/m');
+                
+                $caminhoCompleto = $request->file('documento')->storeAs(
+                    $caminho, 
+                    $nomeArquivo, 
+                    'public'
+                );
+                
+                $transacao = Transacoes::create([
+                    'user_id' => Auth::id(),
+                    'valor' => $request->valor,
+                    'cpf' => preg_replace('/[^0-9]/', '', $request->cpf),
+                    'arquivo_nome' => $caminhoCompleto,
+                    'status' => 'em_processamento'
+                ]);
+                
+                if($transacao){
+                    return redirect()->route('transacoes.index')->with('success','Curso cadastrado com sucesso!');
+                }else{
+                    return redirect()->route('transacoes.index')->with('error','Não foi possivel cadastrar o curso!!');
+                }
+            }
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Erro ao fazer upload do documento.');
+                
+        } catch (\Exception $e) {
+            Log::error('Erro ao criar transação: ' . $e->getMessage());
 
-        $transacao = Transacoes::create($data);
-
-        if($transacao){
-            return redirect()->route('transacoes.index')->with('success','Curso cadastrado com sucesso!');
-        }else{
-            return redirect()->route('transacoes.index')->with('error','Não foi possivel cadastrar o curso!!');
+            return back()
+                ->withInput()
+                ->with('error', 'Erro ao processar a transação: ' . $e->getMessage());
         }
     }
 
@@ -84,7 +102,7 @@ class TransacoesController extends Controller
             'user_id' => Auth::id(),
             'valor' => $request['valor'],
             'cpf' => $request['cpf'],
-            'status' => 'em_processamento'
+            'status' => $request['status'],
         ];
 
         if ($request->hasFile('arquivo')) {

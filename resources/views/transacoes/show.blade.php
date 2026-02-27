@@ -64,6 +64,14 @@
                                             </span>
                                         </td>
                                     </tr>
+                                    @if($transacao->arquivo_nome)
+                                    <tr>
+                                        <th>Comprovante:</th>
+                                        <td>
+                                            <img src="{{ asset('storage/' . $transacao->arquivo_nome) }}" alt="Comprovante da Transação" class="img-fluid">
+                                        </td>
+                                    </tr>
+                                    @endif
                                 </table>
                             </div>
                             <div class="col-md-6">
@@ -80,16 +88,6 @@
                                         <th>Usuário:</th>
                                         <td>{{ $transacao->user_id }} (ID do usuário)</td>
                                     </tr>
-                                    @if($transacao->arquivo)
-                                    <tr>
-                                        <th>Arquivo:</th>
-                                        <td>
-                                            <a href="{{ Storage::url($transacao->arquivo) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-file-earmark"></i> {{ $transacao->arquivo_nome ?? 'Visualizar arquivo' }}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endif
                                 </table>
                             </div>
                         </div>

@@ -71,21 +71,9 @@
                     </h4>
                 </div>
                 <nav class="nav flex-column">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-speedometer2"></i>
-                        Dashboard
-                    </a>
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" href="{{ route('transacoes.index') }}">
                         <i class="bi bi-arrow-left-right"></i>
                         Transações
-                    </a>
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-people"></i>
-                        Clientes
-                    </a>
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-gear"></i>
-                        Configurações
                     </a>
                 </nav>
             </div>

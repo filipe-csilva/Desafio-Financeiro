@@ -25,17 +25,49 @@
 
                 @endif
 
-                <form action="{{ route('transacoes.store') }}" method="POST">
+                <form action="{{ route('transacoes.store') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
 
                     <div class="form-group mt-3 mb-3">
-                        <label for="name">Valor</label>
+                        <label>Valor</label>
                         <input type="text" id="valor" name="valor" class="form-control" value="{{ old('valor') }}">
                     </div>
                     <div class="form-group mt-3">
                         <label>CPF</label>
                         <input type="text" id="cpf" name="cpf" class="form-control" value="{{ old('cpf') }}">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="documento">Documento Comprobatório*</label>
+                        
+                        {{-- Área de upload customizada --}}
+                        <div class="custom-file">
+                            <input type="file" 
+                                    class="custom-file-input @error('documento') is-invalid @enderror" 
+                                    id="documento" 
+                                    name="documento" 
+                                    accept=".pdf,.jpg,.jpeg,.png"
+                                    required>
+                            <label class="custom-file-label" for="documento">
+                                Escolher arquivo...
+                            </label>
+                        </div>
+
+                        {{-- Preview do arquivo selecionado --}}
+                        <div id="preview-container" class="mt-2 d-none">
+                            <div class="alert alert-info">
+                                <i class="fas fa-file"></i> 
+                                <span id="file-name"></span>
+                            </div>
+                        </div>
+
+                        @error('documento')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+
+                        <small class="form-text text-muted">
+                            Formatos aceitos: PDF, JPG, JPEG, PNG (máx. 5MB)
+                        </small>
                     </div>
                     <div class="form-group mt-3">
                         <button class="btn btn-primary">Salvar</button>

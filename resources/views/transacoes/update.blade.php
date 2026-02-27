@@ -37,6 +37,23 @@
                         <label>CPF</label>
                         <input type="text" id="cpf" name="cpf" class="form-control" value="{{ $transacao->cpf }}">
                     </div>
+                    <div class="form-group mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select name="status" id="status" class="form-select @error('status') is-invalid @enderror">
+                            <option value="em_processamento" {{ old('status', $transacao->status) == 'em_processamento' ? 'selected' : '' }}>
+                                Em Processamento
+                            </option>
+                            <option value="aprovada" {{ old('status', $transacao->status) == 'aprovada' ? 'selected' : '' }}>
+                                Aprovada
+                            </option>
+                            <option value="negada" {{ old('status', $transacao->status) == 'negada' ? 'selected' : '' }}>
+                                Negada
+                            </option>
+                        </select>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <div class="form-group mt-3">
                         <button class="btn btn-primary">Atualizar</button>
                     </div>
