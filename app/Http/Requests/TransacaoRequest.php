@@ -11,7 +11,7 @@ class TransacaoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,20 @@ class TransacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'valor' => 'required|numeric|min:0',
+            'cpf' => 'required|string|max:14',
+            // 'status' => 'in:em_processamento,aprovada,negada',
+            'arquivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'valor.min' => "Campo valor menor que o permitido",
+            'valor.required' => "Campo valor é obrigatório",
+            'cpf.required' => "Campo CPF é obrigatório",
+            'cpf.max' => "CPF informado inválido",
         ];
     }
 }
