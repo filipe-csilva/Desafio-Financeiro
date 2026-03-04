@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransacaoRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use App\Models\transacoes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -53,8 +52,7 @@ class TransacoesController extends Controller
                     'user_id' => Auth::id(),
                     'valor' => $request->valor,
                     'cpf' => preg_replace('/[^0-9]/', '', $request->cpf),
-                    'arquivo_nome' => $caminhoCompleto,
-                    'status' => 'em_processamento'
+                    'arquivo_nome' => $caminhoCompleto
                 ]);
                 
                 if($transacao){
